@@ -62,3 +62,16 @@ button:active {
 .option-btn:hover {
     background-color: #138496;
 }
+.option.correct {
+    background-color: #4caf50; /* зелёный */
+}
+
+.option.wrong {
+    background-color: #f44336; /* красный */
+}
+
+.option:disabled {
+    opacity: 0.9;
+    cursor: default;
+}
+
