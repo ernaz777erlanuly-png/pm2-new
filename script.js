@@ -175,115 +175,46 @@ const tema6 = [
 // ...
 // const tema6 = [...];
 
-btn150.onclick = () => {
-    topics.style.display = 'block';
-};
-
-// Выбор тем (6 кнопок по порядку)
-document.querySelectorAll(".topic-btn")[0].onclick = () => startTema(tema1);
-document.querySelectorAll(".topic-btn")[1].onclick = () => startTema(tema2);
-document.querySelectorAll(".topic-btn")[2].onclick = () => startTema(tema3);
-document.querySelectorAll(".topic-btn")[3].onclick = () => startTema(tema4);
-document.querySelectorAll(".topic-btn")[4].onclick = () => startTema(tema5);
-document.querySelectorAll(".topic-btn")[5].onclick = () => startTema(tema6);
-// Находим элементы на странице
-const btn150 = document.getElementById('btn-150');
-const btnRandom = document.getElementById('btn-random');
-const topics = document.getElementById('topics');
+// ====== ЭЛЕМЕНТЫ НА СТРАНИЦЕ ======
+const btn150      = document.getElementById('btn-150');
+const btnRandom   = document.getElementById('btn-random');
+const topics      = document.getElementById('topics');
 const quizContainer = document.createElement('div');
+
 quizContainer.id = 'quiz';
 quizContainer.style.display = 'none';
 document.body.appendChild(quizContainer);
 
-let current = [];   // сюда подставляется выбранная тема
+let current = [];
 let index = 0;
 let score = 0;
 
-// Функция показа вопроса
-function showQuestion() {
-    const q = current[index];
-    quizContainer.innerHTML = `
-        <h2>Вопрос ${index + 1} / ${current.length}</h2>
-        <p>${q.q}</p>
-        <div id="options">
-            ${q.o.map((opt, i) =>
-                `<button class="option" data-a="${String.fromCharCode(65+i)}">${opt}</button>`
-            ).join("")}
-        </div>
-    `;
+// ====== ЛОГИКА КНОПОК ======
 
-const optionButtons = document.querySelectorAll(".option");
+// нажали 150 вопросов → показываем темы
+btn150.onclick = () => {
+    topics.style.display = 'block';
+};
 
-optionButtons.forEach(btn => {
-    btn.onclick = () => {
-        const isCorrect = btn.dataset.a === q.a;
-
-        if (isCorrect) {
-            btn.classList.add("correct");
-            score++;
-        } else {
-            btn.classList.add("wrong");
-            // подсветим правильный вариант
-            optionButtons.forEach(b => {
-                if (b.dataset.a === q.a) {
-                    b.classList.add("correct");
-                }
-            });
-        }
-
-        // выключаем все кнопки, чтобы нельзя было жать дальше
-        optionButtons.forEach(b => b.disabled = true);
-
-        // маленькая пауза и переходим к следующему вопросу
-        setTimeout(() => {
-            index++;
-            if (index < current.length) {
-                showQuestion();
-            } else {
-                finish();
-            }
-        }, 900); // 0.9 секунды
-    };
-});
-
-}
-
-// Конец теста
-function finish() {
-    quizContainer.innerHTML = `
-        <h1>Готово!</h1>
-        <p>Результат: <b>${score}/${current.length}</b></p>
-    `;
-}
-
-// ====== ЛОГИКА КНОПОК ========
-
-// нажали 150 вопросов ➜ показываем темы
-btn150.onclick = ()=> topics.style.display='block';
-
-
-
-
-
-function startTema(arr) {
-    current = [...arr]; // загружаем выбранную тему
-    index = 0;
-    score = 0;
-
-    topics.style.display='none';
-    quizContainer.style.display='block';
-    showQuestion();
-}
+// выбор тем (6 кнопок по порядку)
+document.querySelectorAll('.topic-btn')[0].onclick = () => startTema(tema1);
+document.querySelectorAll('.topic-btn')[1].onclick = () => startTema(tema2);
+document.querySelectorAll('.topic-btn')[2].onclick = () => startTema(tema3);
+document.querySelectorAll('.topic-btn')[3].onclick = () => startTema(tema4);
+document.querySelectorAll('.topic-btn')[4].onclick = () => startTema(tema5);
+document.querySelectorAll('.topic-btn')[5].onclick = () => startTema(tema6);
 
 // рандомные 30 вопросов
-btnRandom.onclick = ()=> {
+btnRandom.onclick = () => {
     const all = [...tema1, ...tema2, ...tema3, ...tema4, ...tema5, ...tema6];
-    current = all.sort(()=>Math.random()-0.5).slice(0,30);
-
-    index=0; score=0;
-    quizContainer.style.display='block';
+    current = all.sort(() => Math.random() - 0.5).slice(0, 30);
+    index = 0;
+    score = 0;
+    quizContainer.style.display = 'block';
     showQuestion();
 };
+
+
 
 
 
