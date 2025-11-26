@@ -1,6 +1,6 @@
-// --- 1. Сұрақтар Дерекқоры (1-ден 150-қа дейін) ---
-const allQuestions = [
-    // Krita сұрақтары (1-25)
+// Пример массива вопросов (можно добавить все 150)
+const questions = [
+      // Krita сұрақтары (1-25)
     { id: 1, q: "Қандай құрал майлы бояуға ұқсас түсті «созуға»(растягивать) және «майлауға»(смазывать) мүмкіндік береді?", o: ["Градиент", "Құю (Заливка)", "Саусақ (Smudge)", "Клондау", "Аэрограф"], a: "C" },
     { id: 2, q: "Krita үшін қосымша щеткаларды қайдан жүктеуге және орнатуға болады?", o: ["«Параметрлер -> Ресурстарды басқару...» мәзірінде", "«Файл -> Импорттау» мәзірінде", "«Қабат -> Жою (Удалить)» мәзірінде", "«Сүзгілер -> Жалпы(Общие)» мәзірінде", "Windows қолданбалар орталығы арқылы"], a: "A" },
     { id: 3, q: "Түзу сызықтарды салу үшін ең ыңғайлы құрал қандай?", o: ["Shift пернесін басып тұрып, «Қылқалам (Кисть)» құралы", "«Сызық (Линия)» құралы", "«Векторлық контур» құралы", "«Лассо» құралы", "A және B дұрыс"], a: "E" },
@@ -158,150 +158,78 @@ const allQuestions = [
   { id: 148, q: "Алыстағы объектілерде қозғалтқыш жүктемесін азайтуға не көмектеседі?", o: ["Subdivision (Разбиение)", "LOD деңгейлері (Уровни детализации)", "HDRI жарықтандыру (Освещение HDRI)", "Motion Blur (Размытие движения)", "Depth of Field (Глубина резкости)"], a: "B" },
   { id: 149, q: "Көптеген шағын нысандарда өнімділікті не жақсартады?", o: ["Instancing (Инстансинг)", "Sculpt Mode (Режим скульптинга)", "Grease Pencil (Рисование поверх 3D)", "Video Sequencer (Видеосеквенсор)", "Keymesh (Ключевая сетка для анимации)"], a: "A" },
   { id: 150, q: "Қандай құрал пішінін қатты жоғалтпай көпбұрыштарды азайтады?", o: ["Solidify (Утолщение)", "Decimate (Уменьшение полигонов)", "Noise (Шум)", "Curve (Кривая)", "Build (Построение)"], a: "B" }
+    // сюда добавляй остальные вопросы
 ];
 
-let currentQuestions = [];
-let testType = '';
+// Состояние теста
+let currentQuestionIndex = 0;
+let score = 0;
 
-none';
-    document.getElementById('results-area').style.display = 'none';
-}
-
-const btn150 = document.getElementById('btn-150');
+// Элементы DOM
+const mainButtons = document.getElementById('main-buttons');
 const topics = document.getElementById('topics');
 
-btn150.addEventListener('click', () => {
+// Создаем контейнер для вопросов
+const quizContainer = document.createElement('div');
+quizContainer.id = 'quiz';
+quizContainer.style.display = 'none';
+document.body.appendChild(quizContainer);
+
+// Функция для показа вопроса
+function showQuestion(index) {
+    const q = questions[index];
+    quizContainer.innerHTML = `
+        <h2>Вопрос ${index + 1} из ${questions.length}</h2>
+        <p>${q.q}</p>
+        <div id="options">
+            ${q.o.map((option, i) => `<button class="option-btn" data-answer="${String.fromCharCode(65 + i)}">${option}</button>`).join('')}
+        </div>
+    `;
+
+    // Назначаем обработчики кнопкам вариантов
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if(btn.dataset.answer === q.a) score++;
+            currentQuestionIndex++;
+            if(currentQuestionIndex < questions.length) {
+                showQuestion(currentQuestionIndex);
+            } else {
+                showResult();
+            }
+        });
+    });
+}
+
+// Функция показа результата
+function showResult() {
+    quizContainer.innerHTML = `<h2>Тест завершен!</h2><p>Ваш результат: ${score} / ${questions.length}</p>`;
+}
+
+// Обработчик главной кнопки 150 вопросов
+document.getElementById('btn-150').addEventListener('click', () => {
+    mainButtons.style.display = 'none';
     topics.style.display = 'block';
 });
 
-
-function showTestArea(title) {
-    document.getElementById('topic-selection').style.display = 'none';
-    document.getElementById('main-menu').style.display = 'none';
-    document.getElementById('results-area').style.display = 'none';
-    document.getElementById('test-area').style.display = 'block';
-    document.getElementById('test-title').innerText = title;
-    renderQuestions();
-}
-
-// --- 3. Сұрақтарды Таңдау Логикасы ---
-
-function startRandomTest(count) {
-    testType = 'random';
-    // Сұрақтарды араластыру және алғашқы N сұрақты таңдау
-    const shuffled = allQuestions.sort(() => 0.5 - Math.random());
-    currentQuestions = shuffled.slice(0, count);
-    showTestArea(`Кездейсоқ ${count} сұрақ бойынша тест`);
-}
-
-function startTopicTest(topicName, startId, endId) {
-    testType = 'topic';
-    // Тақырып бойынша сұрақтарды сүзу
-    currentQuestions = allQuestions.filter(q => q.id >= startId && q.id <= endId);
-    showTestArea(`Тест: ${topicName} (${currentQuestions.length} сұрақ)`);
-}
-
-// --- 4. Сұрақтарды Интерфейске Шығару ---
-
-function renderQuestions() {
-    const form = document.getElementById('quiz-form');
-    form.innerHTML = '';
-    const optionLetters = ['A', 'B', 'C', 'D', 'E'];
-
-    currentQuestions.forEach((q, index) => {
-        let optionsHtml = '';
-        q.o.forEach((option, optIndex) => {
-            const letter = optionLetters[optIndex];
-            optionsHtml += `
-                <label>
-                    <input type="radio" name="question-${q.id}" value="${letter}" required>
-                    <strong>${letter})</strong> ${option}
-                </label>
-            `;
-        });
-
-        form.innerHTML += `
-            <div class="question-card">
-                <p>${index + 1}. Сұрақ. ${q.q}</p>
-                <div class="options">
-                    ${optionsHtml}
-                </div>
-            </div>
-        `;
+// Обработчик выбора темы (запускаем тест)
+document.querySelectorAll('.topic-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        topics.style.display = 'none';
+        quizContainer.style.display = 'block';
+        // Для примера просто берем первые 25 вопросов
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion(0);
     });
-}
+});
 
-// --- 5. Тестті Аяқтау және Нәтижелерді Есептеу ---
-
-function submitTest() {
-    const form = document.getElementById('quiz-form');
-    const formData = new FormData(form);
-    let correctCount = 0;
-    let totalCount = currentQuestions.length;
-    const resultsDetails = [];
-
-    currentQuestions.forEach(q => {
-        const userAnswer = formData.get(`question-${q.id}`);
-        const isCorrect = userAnswer === q.a;
-        if (isCorrect) {
-            correctCount++;
-        }
-
-        // Жауап мәтінін табу үшін
-        const getAnswerText = (letter) => {
-            const index = letter.charCodeAt(0) - 'A'.charCodeAt(0);
-            return q.o[index] || 'Жауап жоқ';
-        };
-
-        const correctAnswerText = getAnswerText(q.a);
-        const userAnswerText = userAnswer ? getAnswerText(userAnswer) : 'Жауап жоқ';
-        
-        resultsDetails.push({
-            id: q.id,
-            question: q.q,
-            userAnswer: userAnswer ? `${userAnswer}) ${userAnswerText}` : 'Жауап берілмеген',
-            correctAnswer: `${q.a}) ${correctAnswerText}`,
-            isCorrect: isCorrect
-        });
-    });
-
-    displayResults(correctCount, totalCount, resultsDetails);
-}
-
-function displayResults(correctCount, totalCount, details) {
-    const percentage = totalCount > 0 ? ((correctCount / totalCount) * 100).toFixed(2) : 0;
-
-    document.getElementById('summary').innerHTML = `
-        <h3>Қорытынды</h3>
-        <p>Жалпы сұрақтар саны: <strong>${totalCount}</strong></p>
-        <p>Дұрыс жауаптар саны: <span class="correct-answer"><strong>${correctCount}</strong></span></p>
-        <p>Қате жауаптар саны: <span class="wrong-answer"><strong>${totalCount - correctCount}</strong></span></p>
-        <p>Нәтиже: <strong>${percentage}%</strong></p>
-    `;
-
-    const detailsArea = document.getElementById('details');
-    detailsArea.innerHTML = '<h3>Егжей-тегжейлі талдау</h3>';
-
-    details.forEach(item => {
-        detailsArea.innerHTML += `
-            <div class="result-item" style="border-left: 5px solid ${item.isCorrect ? '#28a745' : '#dc3545'};">
-                <p><strong>Сұрақ ${item.id}:</strong> ${item.question}</p>
-                <p>
-                    Сіздің жауабыңыз: 
-                    <span class="user-selection ${item.isCorrect ? 'correct-answer' : 'wrong-answer'}">
-                        ${item.userAnswer}
-                        ${item.isCorrect ? ' (✅ Дұрыс)' : ' (❌ Қате)'}
-                    </span>
-                </p>
-                ${!item.isCorrect ? `<p>Дұрыс жауап: <span class="correct-answer">${item.correctAnswer}</span></p>` : ''}
-            </div>
-        `;
-    });
-
-    document.getElementById('test-area').style.display = 'none';
-    document.getElementById('results-area').style.display = 'block';
-}
-
-// Бастапқы мәзірді автоматты түрде көрсету
-document.addEventListener('DOMContentLoaded', showMainMenu);
-
+// Рандомный тест на 30 вопросов
+document.getElementById('btn-random').addEventListener('click', () => {
+    mainButtons.style.display = 'none';
+    quizContainer.style.display = 'block';
+    // Перемешиваем вопросы и берем 30
+    questions.sort(() => Math.random() - 0.5);
+    currentQuestionIndex = 0;
+    score = 0;
+    showQuestion(0);
+});
