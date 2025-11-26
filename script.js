@@ -167,12 +167,13 @@ none';
     document.getElementById('results-area').style.display = 'none';
 }
 
-function startTest(count) {
-    if (count === 160) {
-        document.getElementById('main-menu').style.display = 'none';
-        document.getElementById('topic-selection').style.display = 'block';
-    }
-}
+const btn150 = document.getElementById('btn-150');
+const topics = document.getElementById('topics');
+
+btn150.addEventListener('click', () => {
+    topics.style.display = 'block';
+});
+
 
 function showTestArea(title) {
     document.getElementById('topic-selection').style.display = 'none';
@@ -303,3 +304,4 @@ function displayResults(correctCount, totalCount, details) {
 
 // Бастапқы мәзірді автоматты түрде көрсету
 document.addEventListener('DOMContentLoaded', showMainMenu);
+
