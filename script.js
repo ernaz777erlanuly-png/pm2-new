@@ -212,15 +212,40 @@ function showQuestion() {
         </div>
     `;
 
-    document.querySelectorAll(".option").forEach(btn=>{
-        btn.onclick = ()=> {
-            if(btn.dataset.a === q.a) score++;
-            index++;
+const optionButtons = document.querySelectorAll(".option");
 
-            if(index < current.length) showQuestion();
-            else finish();
+optionButtons.forEach(btn => {
+    btn.onclick = () => {
+        const isCorrect = btn.dataset.a === q.a;
+
+        if (isCorrect) {
+            btn.classList.add("correct");
+            score++;
+        } else {
+            btn.classList.add("wrong");
+            // подсветим правильный вариант
+            optionButtons.forEach(b => {
+                if (b.dataset.a === q.a) {
+                    b.classList.add("correct");
+                }
+            });
         }
-    });
+
+        // выключаем все кнопки, чтобы нельзя было жать дальше
+        optionButtons.forEach(b => b.disabled = true);
+
+        // маленькая пауза и переходим к следующему вопросу
+        setTimeout(() => {
+            index++;
+            if (index < current.length) {
+                showQuestion();
+            } else {
+                finish();
+            }
+        }, 900); // 0.9 секунды
+    };
+});
+
 }
 
 // Конец теста
@@ -259,6 +284,7 @@ btnRandom.onclick = ()=> {
     quizContainer.style.display='block';
     showQuestion();
 };
+
 
 
 
