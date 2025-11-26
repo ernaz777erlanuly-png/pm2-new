@@ -220,12 +220,12 @@ function finish() {
 btn150.onclick = ()=> topics.style.display='block';
 
 // Выбор тем (кнопки по порядку)
-document.querySelectorAll(".topic-btn")[0].onclick = ()=> startTema(tema1);
-document.querySelectorAll(".topic-btn")[1].onclick = ()=> startTema(tema2);
-document.querySelectorAll(".topic-btn")[2].onclick = ()=> startTema(tema3);
-document.querySelectorAll(".topic-btn")[3].onclick = ()=> startTema(tema4);
-document.querySelectorAll(".topic-btn")[4].onclick = ()=> startTema(tema5);
-document.querySelectorAll(".topic-btn")[5].onclick = ()=> startTema(tema6);
+document.querySelectorAll(".topic-btn")[0].onclick = () => startTema(tema1);
+document.querySelectorAll(".topic-btn")[1].onclick = () => startTema(tema2);
+document.querySelectorAll(".topic-btn")[2].onclick = () => startTema(tema3);
+document.querySelectorAll(".topic-btn")[3].onclick = () => startTema(tema4);
+document.querySelectorAll(".topic-btn")[4].onclick = () => startTema(tema5);
+document.querySelectorAll(".topic-btn")[5].onclick = () => startTema(tema6);
 
 function startTema(arr) {
     current = [...arr]; // загружаем выбранную тему
@@ -246,5 +246,6 @@ btnRandom.onclick = ()=> {
     quizContainer.style.display='block';
     showQuestion();
 };
+
 
 
