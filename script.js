@@ -163,17 +163,12 @@ const allQuestions = [
 let currentQuestions = [];
 let testType = '';
 
-// --- 2. Мәзірді Басқару Функциялары ---
-
-function showMainMenu() {
-    document.getElementById('main-menu').style.display = 'block';
-    document.getElementById('topic-selection').style.display = 'none';
-    document.getElementById('test-area').style.display = 'none';
+none';
     document.getElementById('results-area').style.display = 'none';
 }
 
 function startTest(count) {
-    if (count === 150) {
+    if (count === 160) {
         document.getElementById('main-menu').style.display = 'none';
         document.getElementById('topic-selection').style.display = 'block';
     }
@@ -216,17 +211,12 @@ function renderQuestions() {
         let optionsHtml = '';
         q.o.forEach((option, optIndex) => {
             const letter = optionLetters[optIndex];
-           optionsHtml += `
-    <label>
-        <input type="radio" 
-               name="question-${q.id}" 
-               value="${letter}" 
-               onchange="checkInstantAnswer(${q.id}, '${q.a}', '${letter}', this)"
-               required>
-        <strong>${letter})</strong> ${option}
-    </label>
-`;
-
+            optionsHtml += `
+                <label>
+                    <input type="radio" name="question-${q.id}" value="${letter}" required>
+                    <strong>${letter})</strong> ${option}
+                </label>
+            `;
         });
 
         form.innerHTML += `
@@ -313,34 +303,3 @@ function displayResults(correctCount, totalCount, details) {
 
 // Бастапқы мәзірді автоматты түрде көрсету
 document.addEventListener('DOMContentLoaded', showMainMenu);
-function checkInstantAnswer(questionId, correctAnswer, selectedAnswer, element) {
-    const optionLetters = ['A', 'B', 'C', 'D', 'E'];
-
-    // Блок вопроса
-    const card = element.closest(".question-card");
-
-    // Убираем старые подсветки
-    card.querySelectorAll("label").forEach(l => {
-        l.classList.remove("correct");
-        l.classList.remove("wrong");
-    });
-
-    // Подсветка выбранного ответа
-    if (selectedAnswer === correctAnswer) {
-        element.parentElement.classList.add("correct");
-    } else {
-        element.parentElement.classList.add("wrong");
-    }
-
-    // Подсветка правильного ответа
-    const correctIndex = correctAnswer.charCodeAt(0) - 65;
-    const correctLabel = card.querySelectorAll("label")[correctIndex];
-    correctLabel.classList.add("correct");
-
-    // Блокируем все варианты
-    card.querySelectorAll("input").forEach(i => {
-        i.disabled = true;
-    });
-}
-
-
