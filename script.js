@@ -262,7 +262,7 @@ function finish() {
 btn150.onclick = ()=> topics.style.display='block';
 
 
-});
+
 
 
 function startTema(arr) {
@@ -284,6 +284,7 @@ btnRandom.onclick = ()=> {
     quizContainer.style.display='block';
     showQuestion();
 };
+
 
 
 
